@@ -17,6 +17,7 @@ public class MainActivityFragment extends Fragment {
 
     private GPUImage mGPUImage;
     private SurfaceView mSurfaceView;
+    private GLSurfaceView mglSurfaceView;
     public MainActivityFragment() {
 
     }
@@ -25,10 +26,12 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        mSurfaceView = (SurfaceView)view.findViewById(R.id.surfaceView);
-        //mGPUImage = new GPUImage(getActivity().getApplicationContext());
-        //mGPUImage.setGLSurfaceView((GLSurfaceView) view.findViewById(R.id.surfaceView));
-        ExtractMpegFramesWrapper mpegFramesWrapper = new ExtractMpegFramesWrapper( mSurfaceView, getActivity().getApplicationContext());
+        //mSurfaceView = (SurfaceView)view.findViewById(R.id.surfaceView);
+        mglSurfaceView = (GLSurfaceView) view.findViewById(R.id.glSurfaceView);
+        mGPUImage = new GPUImage(getActivity().getApplicationContext());
+        mGPUImage.setGLSurfaceView(mglSurfaceView);
+//        ExtractMpegFramesWrapper mpegFramesWrapper = new ExtractMpegFramesWrapper( null, mSurfaceView, getActivity().getApplicationContext());
+        ExtractMpegFramesWrapper mpegFramesWrapper = new ExtractMpegFramesWrapper( mGPUImage, mglSurfaceView, getActivity().getApplicationContext());
         mpegFramesWrapper.start();
         return view;
     }

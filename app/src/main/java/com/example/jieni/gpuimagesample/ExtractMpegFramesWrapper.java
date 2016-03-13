@@ -42,9 +42,9 @@ public class ExtractMpegFramesWrapper extends Thread{
     private final String INPUT_FILE = "source2.mp4";
     private final int MAX_FRAMES = 10000;       // stop extracting after this many
 
-    public ExtractMpegFramesWrapper(SurfaceView surfaceView, Context context){
-        //mGPUImage =gpuImage;
-        mSurfaceView = surfaceView;
+    public ExtractMpegFramesWrapper(GPUImage gpuImage, GLSurfaceView surfaceView, Context context){
+        mGPUImage =gpuImage;
+        mGLSurfaceView = surfaceView;
         mContext = context;
 
        // mGPUImage = new GPUImage(mContext);
@@ -98,14 +98,15 @@ public class ExtractMpegFramesWrapper extends Thread{
             videoWidth =format.getInteger(MediaFormat.KEY_WIDTH);
             videoHeight = format.getInteger(MediaFormat.KEY_HEIGHT);
             // Could use width/height from the MediaFormat to get full-size frames.
-            outputSurface = new CodecOutputSurface(videoWidth, videoHeight);
+            //outputSurface = new CodecOutputSurface(videoWidth, videoHeight);
 
             // Create a MediaCodec decoder, and configure it with the MediaFormat from the
             // extractor.  It's very important to use the format from the extractor because
             // it contains a copy of the CSD-0/CSD-1 codec-specific data chunks.
             String mime = format.getString(MediaFormat.KEY_MIME);
             decoder = MediaCodec.createDecoderByType(mime);
-            decoder.configure(format, outputSurface.getSurface(), null, 0);
+            //decoder.configure(format, outputSurface.getSurface(), null, 0);
+            decoder.configure(format, mGLSurfaceView.getHolder().getSurface(), null, 0);
             decoder.start();
 
             doExtract(extractor, trackIndex, decoder, outputSurface);
@@ -237,11 +238,11 @@ public class ExtractMpegFramesWrapper extends Thread{
                     decoder.releaseOutputBuffer(decoderStatus, doRender);
                     if (doRender) {
                         if (VERBOSE) Log.d(TAG, "awaiting decode of frame " + decodeCount);
-                        outputSurface.awaitNewImage();
-                        outputSurface.drawImage(true);
+                        //outputSurface.awaitNewImage();
+                        //outputSurface.drawImage(true);
 
                         //[NJ] Draw the captured frame to  the surface
-                        outputSurface.drawFrame(mSurfaceView,mGPUImage);
+                        //outputSurface.drawFrame(mSurfaceView,mGPUImage);
 
                     }
 
